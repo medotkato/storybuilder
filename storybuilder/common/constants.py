@@ -1,4 +1,3 @@
 """ Константы, используемые в приложении: пути к файлам и т.д. """
 
-HELLO = "Hello"
-default_in_folder = "tests/test_story/in_folder"
+DEFAULT_IN_FILE = "tests/test_story/input/outline.md"
