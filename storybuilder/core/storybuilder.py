@@ -45,7 +45,8 @@ def main () -> int:
             # пишем заголовки as is, только для режима отладки
             # добавим пометку в начало файла
             if title_match:
-                debug_title = "// DEBUG_MODE" if title_match.group(1) == "#" and debug_mode_on else ""
+                debug_title = "// DEBUG_MODE" if title_match.group(1) == "#" \
+                                                 and debug_mode_on else ""
                 out_file.write(f"{line}{debug_title}\n\n")
 
             # сцены забираем из файлов по ссылке, парсим
