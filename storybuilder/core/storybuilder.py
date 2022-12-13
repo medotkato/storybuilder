@@ -16,6 +16,24 @@ def scene_text_writer (file_TextIOWrapper, scene_text: list):
         # out_file.write(line_begining + scene_text_line)
     return True
 
+def get_scene_text (scene_file_content_yaml):
+    first_item = scene_file_content_yaml[0]
+    if isinstance(first_item, dict):
+        scene_content = scene_file_content_yaml[0].get \
+                        ("H1_1", "Oops, 1st level header (# bla-bla) not found")["content"]
+        f = lambda list, i, default: list[i:i+1] and list[i] or default
+        scene_text_dict = f(scene_content, 1, "ERROR")
+        scene_text = scene_text_dict["H2_2"]["content"] \
+                    if (scene_text_dict != "ERROR" and scene_text_dict["H2_2"]["label"].lower() == "text") \
+                    else ["Oops, 2nd level header '## Text' section not found on the 2nd position"]
+    else:
+        scene_text = ["Oops, 1st level header (# Scene name) not found. Check for # at the beginning of the first line"]
+
+    # scene_text = scene_file_content_yaml[0]["H1_1"]["content"]\
+                                        # [1]["H2_2"]["content"]
+
+    return scene_text
+
 def main () -> int:
 
     start_datetime = datetime.now().strftime("%y%m%d_%H-%M-%S")
@@ -45,7 +63,7 @@ def main () -> int:
             # пишем заголовки as is, только для режима отладки
             # добавим пометку в начало файла
             if title_match:
-                debug_title = "// DEBUG_MODE" if title_match.group(1) == "#" \
+                debug_title = " // DEBUG_MODE" if title_match.group(1) == "#" \
                                                  and debug_mode_on else ""
                 out_file.write(f"{line}{debug_title}\n\n")
 
@@ -58,8 +76,7 @@ def main () -> int:
                 scene_filename = os.path.abspath(f'{in_folder}/{md_url}')
                 scene_file_content = get_md_file_content(scene_filename)
                 scene_file_content_yaml = parse_md_yaml(scene_file_content)
-                scene_text = scene_file_content_yaml[0]["H1_1"]["content"]\
-                                                    [1]["H2_2"]["content"]
+                scene_text = get_scene_text(scene_file_content_yaml)
                 scene_text_writer(out_file, scene_text)
 
             # названия незавершенных сцен выводим как есть (без - в начале)
@@ -70,7 +87,7 @@ def main () -> int:
             else:
                 pass
 
-    print (f"Done. Story was successfully built and written to {out_file_abs}")
+    print (f"Done. Story was built and written to {out_file_abs}.\nRun again with -d flag (debug mode) if some scenes are missing")
     return 0
 
 if __name__ == "__main__":
