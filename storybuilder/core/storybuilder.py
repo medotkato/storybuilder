@@ -27,7 +27,7 @@ def get_scene_text (scene_file_content_yaml):
                     if (scene_text_dict != "ERROR" and scene_text_dict["H2_2"]["label"].lower() == "text") \
                     else ["Oops, 2nd level header '## Text' section not found on the 2nd position"]
     else:
-        scene_text = ["Oops, 1st level header (# Scene name) not found." + \
+        scene_text = ["Oops, 1st level header (# Scene name) not found.\n" + \
                       "Check for # at the beginning of the first line"]
 
     # scene_text = scene_file_content_yaml[0]["H1_1"]["content"]\
