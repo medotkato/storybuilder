@@ -16,7 +16,7 @@ def scene_text_writer (file_TextIOWrapper, scene_text: list):
         # out_file.write(line_begining + scene_text_line)
     return True
 
-def get_scene_text (scene_file_content_yaml):
+def get_raw_scene_text (scene_file_content_yaml: list) -> list:
     first_item = scene_file_content_yaml[0]
     if isinstance(first_item, dict):
         scene_content = scene_file_content_yaml[0].get \
@@ -34,6 +34,24 @@ def get_scene_text (scene_file_content_yaml):
                                         # [1]["H2_2"]["content"]
 
     return scene_text
+
+def get_polished_scene_text (scene_text_raw: list):
+    """ типографика: замена кавычек на елочки, дефисов на тире и пр.
+    """
+    def multi_replace (string, replace_dict):
+        result = string
+        for as_is, to_be in replace_dict.items():
+            result = result.replace(as_is, to_be)
+        return result
+
+    replace_dict = {"- " : "— ", " -" : " —"}
+    polished_scene_text = [multi_replace(row, replace_dict) for row in scene_text_raw]
+    # типографим открывающую кавычку
+    polished_scene_text = [re.sub(r"\"(\w)",r"«\1",row) for row in polished_scene_text]
+    # типографим закрывающую кавычку
+    polished_scene_text = [re.sub(r"(\w|[?!.])\"",r"\1»",row) for row in polished_scene_text]
+
+    return polished_scene_text
 
 def main () -> int:
 
@@ -59,7 +77,7 @@ def main () -> int:
             title_match = re.search('^\s*(#+)(.*)', line)
             md_url_match = re.search("\[.+\]\((.+)\)", line)
             not_finished_scene_match = re.search("^\s*-\s*(.+)$", line)
-            comment_match = re.search("^\s*//\s*(.*)", line)
+            # comment_match = re.search("^\s*//\s*(.*)", line)
 
             # пишем заголовки as is, только для режима отладки
             # добавим пометку в начало файла
@@ -77,8 +95,9 @@ def main () -> int:
                 scene_filename = os.path.abspath(f'{in_folder}/{md_url}')
                 scene_file_content = get_md_file_content(scene_filename)
                 scene_file_content_yaml = parse_md_yaml(scene_file_content)
-                scene_text = get_scene_text(scene_file_content_yaml)
-                scene_text_writer(out_file, scene_text)
+                scene_text_raw = get_raw_scene_text(scene_file_content_yaml)
+                scene_text_polished = get_polished_scene_text(scene_text_raw)
+                scene_text_writer(out_file, scene_text_polished)
 
             # названия незавершенных сцен выводим как есть (без - в начале)
             elif not_finished_scene_match:
@@ -87,9 +106,8 @@ def main () -> int:
             # все остальное нам не нужно (комментарии, например)
             else:
                 pass
-
-    print (f"Done. Story was built and written to {out_file_abs}.\n" + \
-            "Run again with -d flag (debug mode) if some scenes are missing")
+    if_debug = "Run again with -d flag (debug mode) if some scenes are missing" if not debug_mode_on else ""
+    print (f"Done. Story was built and written to {out_file_abs}.\n" + if_debug)
     return 0
 
 if __name__ == "__main__":
