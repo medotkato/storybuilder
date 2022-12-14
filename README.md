@@ -6,7 +6,7 @@ Story Builder: builds story.md from [TPT](https://github.com/5off/tpt) based sto
 
 > python -m storybuilder -i path/to/outline.md
 
-By default the cmplete story will be placed in the same folder as oultine.md. If you want to define the output file use -o flag:
+By default the complete story will be placed in the same folder as oultine.md. If you want to define the output file use -o flag:
 
 > python -m storybuilder -i path/to/outline.md -o /path/to/output_md_file.md
 
