@@ -99,7 +99,7 @@ def main () -> int:
                 scene_text_polished = get_polished_scene_text(scene_text_raw)
                 scene_text_writer(out_file, scene_text_polished)
 
-            # названия незавершенных сцен выводим как есть (без - в начале)
+            # названия незавершенных сцен выводим как есть (без дефиса в начале)
             elif not_finished_scene_match:
                     out_file.write(f"=== {not_finished_scene_match.group(1)}\n\n")
 

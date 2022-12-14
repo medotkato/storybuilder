@@ -13,3 +13,11 @@ By default the complete story will be placed in the same folder as oultine.md. I
 If you want to build the story file with links to scenes (for debug purposes), use -d flag:
 
 > python -m storybuilder -i path/to/outline.md -d
+
+## Example
+
+Try
+
+> python -m storybuilder
+
+By default (without any arguments) storybuilder will use the file /storybuilder/tests/test_story/input/outline.md and will place the story file (built from this outline) into the same folder.
