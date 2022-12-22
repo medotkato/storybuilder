@@ -10,7 +10,7 @@ def get_md_file_content (md_file: str) -> list:
         md_strip = [x for x in md if x != '']
     return md_strip
 
-def parse_md_yaml(file_content: list) -> list:
+def md_to_yaml(file_content: list) -> list:
     """ Парсит .md файл и собирает список dict-ов, где каждый раздел (по уровню заголовка) - свой dict внутри списка, а текстовые строки содержатся списком в элементе content соответствующего раздела """
     parsed_md = list()
     rownum = 0
@@ -45,7 +45,7 @@ def parse_md_yaml(file_content: list) -> list:
             end_rownum = rownum
             # нашли номер строки, где заканчивается секция (либо дошли до конца)
 
-            section_content = parse_md_yaml (file_content[start_rownum:end_rownum])
+            section_content = md_to_yaml (file_content[start_rownum:end_rownum])
             parsed_md.append ({section_key: {'label': section_label, 'content': section_content}})
             level_index += 1
 

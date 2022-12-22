@@ -21,3 +21,7 @@ Try
 > python -m storybuilder
 
 By default (without any arguments) storybuilder will use the file /storybuilder/tests/test_story/input/outline.md and will place the story file (built from this outline) into the same folder.
+
+## Tests:
+
+> python -m pytest
