@@ -7,7 +7,7 @@ from datetime import datetime
 
 from storybuilder.utils.arguments import get_args
 from storybuilder.utils.md_handler import get_md_file_content, md_to_yaml
-from storybuilder.common.constants import DEFAULT_IN_FILE
+from storybuilder.common.constants import DEFAULT_IN_FILE, DEFAULT_OUT_FILE
 from storybuilder.utils.scene_handler import write_scene_to_file, get_raw_scene_text, get_polished_scene_text
 
 def main () -> int:
@@ -17,7 +17,7 @@ def main () -> int:
     arguments = get_args(sys.argv[1:]) # all except the script's name
 
     in_file = arguments.in_file if arguments.in_file else DEFAULT_IN_FILE
-    out_file = arguments.out_file if arguments.out_file else ""
+    out_file = arguments.out_file if arguments.out_file else DEFAULT_OUT_FILE
     debug_mode_on = arguments.debug
 
     if debug_mode_on:
@@ -68,7 +68,7 @@ def main () -> int:
             # все остальное нам не нужно (комментарии, например)
             else:
                 pass
-    if_debug = "Run again with -d flag (debug mode) if some scenes are missing" if not debug_mode_on else ""
+    if_debug = "Run again with -d flag (debug mode) if scenes are missing or you see unexpected things inside the compiled story" if not debug_mode_on else ""
     print (f"Done. Story was built and written to {out_file_abs}.\n" + if_debug)
     return 0
 
