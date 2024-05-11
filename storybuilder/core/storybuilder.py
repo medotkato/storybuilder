@@ -7,7 +7,7 @@ from datetime import datetime
 
 from storybuilder.utils.arguments import get_args
 from storybuilder.utils.md_handler import get_md_file_content, md_to_yaml
-from storybuilder.common.constants import DEFAULT_IN_FILE, DEFAULT_OUT_FILE
+from storybuilder.common.constants import DEFAULT_IN_FILE, DEFAULT_OUT_FOLDER
 from storybuilder.utils.scene_handler import write_scene_to_file, get_raw_scene_text, get_polished_scene_text
 
 def main () -> int:
@@ -17,7 +17,7 @@ def main () -> int:
     arguments = get_args(sys.argv[1:]) # all except the script's name
 
     in_file = arguments.in_file if arguments.in_file else DEFAULT_IN_FILE
-    out_file = arguments.out_file if arguments.out_file else DEFAULT_OUT_FILE
+    out_file = arguments.out_folder if arguments.out_folder else DEFAULT_OUT_FOLDER
     debug_mode_on = arguments.debug
 
     if debug_mode_on:
@@ -25,9 +25,10 @@ def main () -> int:
     debug_flag = "_debug" if debug_mode_on else ""
     in_folder = os.path.dirname(in_file)
     outline_file_abs = os.path.abspath(in_file)
+    out_folder = os.path.dirname(out_file)
     out_file_abs = os.path.abspath(\
-                    out_file if out_file else \
-                    f"{in_folder}/story_{start_datetime}{debug_flag}.md"
+                    #out_file if out_file else \
+                    f"{out_folder}/story_{start_datetime}{debug_flag}.md"
                     )
 
     print (f"Parsing outline from {outline_file_abs}")
@@ -36,9 +37,9 @@ def main () -> int:
 
     with open(out_file_abs,'w', encoding="utf-8") as out_file:
         for line in tqdm(outline_content):
-            title_match = re.search('^\s*(#+)(.*)', line)
-            md_url_match = re.search("\[.+\]\((.+)\)", line)
-            not_finished_scene_match = re.search("^\s*-\s*(.+)$", line)
+            title_match = re.search(r'^\s*(#+)(.*)', line)
+            md_url_match = re.search(r'\[.+\]\((.+)\)', line)
+            not_finished_scene_match = re.search(r'^\s*-\s*(.+)$', line)
             # comment_match = re.search("^\s*//\s*(.*)", line)
 
             # пишем заголовки as is, только для режима отладки

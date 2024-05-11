@@ -7,10 +7,10 @@ def get_args (args):
                         metavar='/path/to/in_file',
                         type=str,
                         help='path to the outline.md file')
-    my_parser.add_argument('-o', '--out_file',
-                        metavar='/path/to/out_file',
+    my_parser.add_argument('-o', '--out_folder',
+                        metavar='/path/to/out_folder',
                         type=str,
-                        help='path to the output story file')
+                        help='path to the folder for the compiled story file')
     my_parser.add_argument('-d', '--debug',
                         action="store_true",
                         help='debug mode on/off')
